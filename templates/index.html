@@ -139,7 +139,7 @@
 
     <script>
         async function carregarUtilizadores() {
-            const resposta = await fetch("/users");
+            const resposta = await fetch("https://mini-banco-de-utilizadores.onrender.com/users");
             const utilizadores = await resposta.json();
             const lista = document.getElementById("listaUtilizadores");
 
@@ -206,7 +206,7 @@
                             return;
                         }
 
-                        const resposta = await fetch(`/users/${user.id}`, {
+                        const resposta = await fetch(`https://mini-banco-de-utilizadores.onrender.com/users/${user.id}`, {
                             method: "PUT",
                             headers: {
                                 "Content-Type": "application/json"
@@ -254,7 +254,7 @@
                 botaoApagar.textContent = "Apagar";
                 botaoApagar.addEventListener("click", async function() {
 
-                    const resposta = await fetch(`/users/${user.id}`, {
+                    const resposta = await fetch(`https://mini-banco-de-utilizadores.onrender.com/users/${user.id}`, {
                         method: "DELETE"
                     });
 
@@ -281,7 +281,7 @@
             const idade = document.getElementById("idade").value;
             const email = document.getElementById("email").value;
 
-            const resposta = await fetch("/users", {
+            const resposta = await fetch("https://mini-banco-de-utilizadores.onrender.com/users", {
                 //flask quero falar contigo atraves do /users
                 method: "POST", //quero criar alguma coisa
                 headers: {

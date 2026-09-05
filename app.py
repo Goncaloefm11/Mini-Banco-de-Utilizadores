@@ -1,9 +1,12 @@
 from flask import Flask, jsonify, request, render_template
 import sqlite3
 
+from flask_cors import CORS
+
 #request permite ao flask ler os dados que alguem envia
 
 app = Flask(__name__) #cria a pagina Flask
+CORS(app)
 
 @app.route("/") #quando alguem entrar em / executa a funçao
 def home():
