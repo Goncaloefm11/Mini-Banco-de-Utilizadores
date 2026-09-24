@@ -86,6 +86,10 @@
         font-family: Arial, sans-serif;
     }
 
+    #cargo {
+        font-size: 16px;
+    }
+
     #mensagem {
         text-align: center;
         font-size: 20px;
@@ -152,6 +156,7 @@
     <script>
         async function carregarUtilizadores() {
             const resposta = await fetch("https://mini-banco-de-utilizadores.onrender.com/users");
+            //await fetch("/users");
             const utilizadores = await resposta.json();
             const lista = document.getElementById("listaUtilizadores");
 
@@ -208,8 +213,14 @@
                     inputEmail.type = "email";
                     inputEmail.value = user.email;
 
-                    const inputCargo = document.createElement("input");
-                    inputCargo.value = user.cargo;
+                    const inputCargo = document.createElement("select");
+                    ["auxiliar", "sub-chefe", "chefe"].forEach(function(c) {
+                        const option = document.createElement("option");
+                        option.value = c;
+                        option.textContent = c;
+                        option.selected = c === user.cargo;
+                        inputCargo.appendChild(option);
+                    });
 
 
                     nome.appendChild(inputNome);
@@ -228,6 +239,7 @@
                         }
 
                         const resposta = await fetch(`https://mini-banco-de-utilizadores.onrender.com/users/${user.id}`, {
+                        //await fetch (`/users/${user.id}` , {
                             method: "PUT",
                             headers: {
                                 "Content-Type": "application/json"
@@ -279,6 +291,8 @@
                 botaoApagar.addEventListener("click", async function() {
 
                     const resposta = await fetch(`https://mini-banco-de-utilizadores.onrender.com/users/${user.id}`, {
+                    //await fetch(`/users/${user.id}` , {
+
                         method: "DELETE"
                     });
 
@@ -307,6 +321,7 @@
             const cargo = document.getElementById("cargo").value;
 
             const resposta = await fetch("https://mini-banco-de-utilizadores.onrender.com/users", {
+            //await fetch("/users", {
                 //flask quero falar contigo atraves do /users
                 method: "POST", //quero criar alguma coisa
                 headers: {
