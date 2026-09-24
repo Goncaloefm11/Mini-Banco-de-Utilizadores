@@ -9,6 +9,37 @@ from pydantic import BaseModel
 app = Flask(__name__) #cria a pagina Flask
 CORS(app)
 
+def atualizar_base_dados():
+    connection = sqlite3.connect("database.db")
+    cursor = connection.cursor()
+
+    colunas = cursor.execute("PRAGMA table_info(users)").fetchall()
+    nomes_colunas = [coluna[1] for coluna in colunas]
+
+    if "cargo" not in nomes_colunas:
+        cursor.execute("""
+            ALTER TABLE users
+            ADD COLUMN cargo TEXT NOT NULL DEFAULT 'auxiliar'
+        """)
+
+    cursor.execute("""
+    UPDATE users
+    SET cargo = 'chefe'
+    WHERE nome = 'João'
+    """)
+
+    cursor.execute("""
+        UPDATE users
+        SET cargo = 'sub-chefe'
+        WHERE nome = 'Maria'
+    """)
+
+    connection.commit()
+    connection.close()
+
+
+atualizar_base_dados()
+
 @app.route("/") #quando alguem entrar em / executa a funçao
 def home():
     return render_template("index.html")
