@@ -115,6 +115,17 @@
 
         <br><br>
 
+        <br><br>
+
+        <label>Cargo:</label>
+        <select id="cargo">
+            <option value="auxiliar">Auxiliar</option>
+            <option value="sub-chefe">Sub-chefe</option>
+            <option value="chefe">Chefe</option>
+        </select>
+
+        <br><br>
+
         <button type="submit">Adicionar Utilizador</button>
 
     </form>
@@ -127,6 +138,7 @@
                 <th>Nome</th>
                 <th>Idade</th>
                 <th>Email</th>
+                <th>Cargo</th>
                 <th>Ações</th>
             </tr>
         </thead>
@@ -161,12 +173,16 @@
                 const email = document.createElement("td");
                 email.textContent = user.email;
 
+                const cargo = document.createElement("td");
+                cargo.textContent = user.cargo;
+
                 const acoes = document.createElement("td");
                 
                 item.appendChild(id);
                 item.appendChild(nome);
                 item.appendChild(idade);
                 item.appendChild(email);
+                item.appendChild(cargo);
                 item.appendChild(acoes);
 
                 const botaoEditar = document.createElement("button");
@@ -179,6 +195,7 @@
                     nome.innerHTML = "";
                     idade.innerHTML = "";
                     email.innerHTML = "";
+                    cargo.innerHTML = "";
 
                     const inputNome = document.createElement("input");
                     inputNome.value = user.nome; //por omissao mete o que ja estava
@@ -191,10 +208,14 @@
                     inputEmail.type = "email";
                     inputEmail.value = user.email;
 
+                    const inputCargo = document.createElement("input");
+                    inputCargo.value = user.cargo;
+
 
                     nome.appendChild(inputNome);
                     idade.appendChild(inputIdade);
                     email.appendChild(inputEmail);
+                    cargo.appendChild(inputCargo);
 
 
                     const botaoGuardar = document.createElement("button");
@@ -214,7 +235,8 @@
                             body: JSON.stringify({
                                 nome: inputNome.value, //poe o que o utilizador escolher
                                 idade: inputIdade.value,
-                                email: inputEmail.value
+                                email: inputEmail.value,
+                                cargo: inputCargo.value
                             })
                         });
                             
@@ -235,10 +257,12 @@
                         idade.innerHTML = "";
                         email.innerHTML = "";
                         acoes.innerHTML = "";
+                        cargo.innerHTML = "";
 
                         nome.textContent = user.nome;
                         idade.textContent = user.idade;
                         email.textContent = user.email;
+                        cargo.textContent = user.cargo;
 
                         acoes.appendChild(botaoEditar);
                         acoes.appendChild(botaoApagar);
@@ -280,6 +304,7 @@
             const nome = document.getElementById("nome").value;
             const idade = document.getElementById("idade").value;
             const email = document.getElementById("email").value;
+            const cargo = document.getElementById("cargo").value;
 
             const resposta = await fetch("https://mini-banco-de-utilizadores.onrender.com/users", {
                 //flask quero falar contigo atraves do /users
@@ -290,7 +315,8 @@
                 body: JSON.stringify({
                     nome: nome,
                     idade: idade,
-                    email: email
+                    email: email,
+                    cargo: cargo
                 })
             });
             const resultado = await resposta.json();

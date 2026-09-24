@@ -9,19 +9,20 @@ CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT NOT NULL,
     idade INTEGER NOT NULL,
-    email TEXT NOT NULL
+    email TEXT NOT NULL,
+    cargo TEXT NOT NULL DEFAULT "auxiliar"
 )
 """)
 
 cursor.execute("""
-INSERT INTO users (nome, idade, email)
-VALUES (?, ?, ?)
-""", ("João", 23, "joao@gmail.com"))
+INSERT INTO users (nome, idade, email, cargo)
+VALUES (?, ?, ?, ?)
+""", ("João", 23, "joao@gmail.com", "chefe"))
 
 cursor.execute("""
-INSERT INTO users (nome, idade, email)
-VALUES (?, ?, ?)
-""", ("Maria", 21, "maria@gmail.com"))
+INSERT INTO users (nome, idade, email, cargo)
+VALUES (?, ?, ?, ?)
+""", ("Maria", 21, "maria@gmail.com", "sub-chefe"))
 
 cursor.execute("""
 INSERT INTO users (nome, idade, email)

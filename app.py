@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request, render_template
 import sqlite3
 
 from flask_cors import CORS
+from pydantic import BaseModel
 
 #request permite ao flask ler os dados que alguem envia
 
@@ -13,7 +14,14 @@ def home():
     return render_template("index.html")
 
 
-@app.route("/users")
+class Utilizador (BaseModel):
+    nome : str
+    idade : int
+    email : str
+    cargo : str
+
+
+@app.get("/users")
 def users():
     connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
@@ -30,27 +38,34 @@ def users():
             "id": user[0],
             "nome": user[1],
             "idade": user[2],
-            "email": user[3]
+            "email": user[3],
+            "cargo": user[4]
         })
 
     return jsonify(resultado) #resultado em json
 
-@app.route("/users", methods=["POST"])
+@app.post("/users")
 def create_user():
     data = request.get_json()
 
     nome = data["nome"]
     idade = int(data["idade"])
     email = data ["email"]
+    cargo = data["cargo"]
+    cargos_validos = ["chefe", "sub-chefe", "auxiliar"]
 
     if not nome :
         return jsonify({
         "mensagem": "Utilizador não definido!"
         })
-    elif idade < 16 :
+    elif idade < 18 :
         return jsonify({
         "mensagem": "Utilizador sem idade atingida!"
         })
+    elif cargo not in cargos_validos:
+        return jsonify({
+            "mensagem": "Cargo inválido!"
+        }), 400
     
 
     connection = sqlite3.connect("database.db")
@@ -58,9 +73,9 @@ def create_user():
 
 
     cursor.execute("""
-        INSERT INTO users (nome, idade, email)
-        VALUES (?, ?, ?)
-    """, (nome, idade, email))
+        INSERT INTO users (nome, idade, email, cargo)
+        VALUES (?, ?, ?, ?)
+    """, (nome, idade, email, cargo))
 
     connection.commit()
     connection.close()
@@ -69,7 +84,7 @@ def create_user():
         "mensagem": "Utilizador criado com sucesso!"
     })
 
-@app.route("/users/<int:user_id>", methods=["DELETE"])
+@app.delete("/users/<int:user_id>")
 def delete_user(user_id):
 
     connection = sqlite3.connect("database.db")
@@ -87,22 +102,23 @@ def delete_user(user_id):
         "mensagem": "Utilizador eliminado com sucesso!"
     })
 
-@app.route("/users/<int:user_id>", methods=["PUT"])
+@app.put("/users/<int:user_id>")
 def update_user(user_id):
     data = request.get_json()
 
     nome = data["nome"]
     idade = data["idade"]
     email = data ["email"]
+    cargo = data ["cargo"]
 
     connection = sqlite3.connect("database.db")
     cursor = connection.cursor()
 
     cursor.execute("""
         UPDATE users
-        SET nome = ?, idade = ?, email = ?
+        SET nome = ?, idade = ?, email = ?, cargo = ?
         WHERE id = ?
-    """, (nome, idade, email, user_id))
+    """, (nome, idade, email, cargo, user_id))
 
     connection.commit()
     connection.close()
